@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     private int rotationInputDirection;
     private Rigidbody rb;
     private List<Transform> planks = new List<Transform>();
+    private Coroutine dieCoroutine;
 
     private void Start()
     {
@@ -35,10 +36,18 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(transform.position, Vector3.down, out hit))
         {
-            Debug.Log(hit.collider.tag);
+            //Debug.Log(hit.collider.tag);
             if(hit.collider.CompareTag("Void"))
             {
                 PlacePlank();
+            }
+            else
+            {
+                if(dieCoroutine != null)
+                {
+                    StopCoroutine(dieCoroutine);
+                    dieCoroutine = null;
+                }
             }
         }
     }
@@ -56,15 +65,35 @@ public class Player : MonoBehaviour
 
     private void PlacePlank()
     {
-        if(planks.Count != 0)
+        if(planks.Count == 0)
         {
-            Transform lastPlank = planks[planks.Count - 1];
-            lastPlank.SetParent(placedPlanksParent);
-            lastPlank.position = transform.position + Vector3.down * 0.2f;
-            BoxCollider plankCollider = lastPlank.GetComponent<BoxCollider>();
-            plankCollider.size = plankCollider.size + new Vector3(0, 0, 2f);
-            planks.RemoveAt(planks.Count - 1);
+            if(dieCoroutine == null)
+            {
+                dieCoroutine = StartCoroutine(DieCoroutine());
+            }
+            return;
         }
+
+        if(dieCoroutine != null)
+        {
+            StopCoroutine(dieCoroutine);
+            dieCoroutine = null;
+        }
+
+        Transform lastPlank = planks[planks.Count - 1];
+        lastPlank.SetParent(placedPlanksParent);
+        lastPlank.position = transform.position + Vector3.down * 0.2f;
+        BoxCollider plankCollider = lastPlank.GetComponent<BoxCollider>();
+        plankCollider.size = plankCollider.size + new Vector3(0, 0, 2f);
+        planks.RemoveAt(planks.Count - 1);
+    }
+
+    private IEnumerator DieCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        enableMoving = false;
+        rb.isKinematic = false;
+        GameManager.Instance.GameOver();
     }
 
     private void OnDrawGizmosSelected()
