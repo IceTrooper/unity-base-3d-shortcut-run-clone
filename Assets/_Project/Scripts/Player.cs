@@ -7,9 +7,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float forwardSpeed;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private bool enableMoving;
+    [SerializeField] private Transform planksPoint;
 
     private int rotationInputDirection;
     private Rigidbody rb;
+    private List<Transform> planks = new List<Transform>();
 
     private void Start()
     {
@@ -38,6 +40,17 @@ public class Player : MonoBehaviour
             {
                 PlacePlank();
             }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Plank"))
+        {
+            collision.rigidbody.isKinematic = true;
+            collision.transform.SetParent(transform);
+            collision.transform.SetPositionAndRotation(planksPoint.position + Vector3.up * planks.Count * 0.2f, transform.rotation);
+            planks.Add(collision.transform);
         }
     }
 
