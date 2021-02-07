@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private bool enableMoving;
     [SerializeField] private Transform planksPoint;
+    [SerializeField] private Transform placedPlanksParent;
 
     private int rotationInputDirection;
     private Rigidbody rb;
@@ -34,7 +35,6 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if(Physics.Raycast(transform.position, Vector3.down, out hit))
         {
-            Debug.DrawRay(transform.position, Vector3.down);
             Debug.Log(hit.collider.tag);
             if(hit.collider.CompareTag("Void"))
             {
@@ -56,6 +56,19 @@ public class Player : MonoBehaviour
 
     private void PlacePlank()
     {
+        if(planks.Count != 0)
+        {
+            Transform lastPlank = planks[planks.Count - 1];
+            lastPlank.SetParent(placedPlanksParent);
+            lastPlank.position = transform.position + Vector3.down * 0.2f;
+            BoxCollider plankCollider = lastPlank.GetComponent<BoxCollider>();
+            plankCollider.size = plankCollider.size + new Vector3(0, 0, 2f);
+            planks.RemoveAt(planks.Count - 1);
+        }
+    }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawRay(transform.position, Vector3.down);
     }
 }

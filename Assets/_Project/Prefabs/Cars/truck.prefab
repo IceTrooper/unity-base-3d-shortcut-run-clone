@@ -43,7 +43,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardSpeed: 10
   rotationSpeed: 120
-  enableMoving: 0
+  enableMoving: 1
+  planksPoint: {fileID: 3584897074215327968}
+  placedPlanksParent: {fileID: 0}
 --- !u!1 &8557776359172936112
 GameObject:
   m_ObjectHideFlags: 0
