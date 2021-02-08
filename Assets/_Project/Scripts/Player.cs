@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public bool movingEnabled;
     [SerializeField] private float forwardSpeed;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private bool enableMoving;
     [SerializeField] private Transform planksPoint;
     [SerializeField] private Transform placedPlanksParent;
 
     private int rotationInputDirection;
     private Rigidbody rb;
+    public int planksCount => planks.Count;
     private List<Transform> planks = new List<Transform>();
     private Coroutine dieCoroutine;
 
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(enableMoving)
+        if(movingEnabled)
         {
             rb.MovePosition(rb.position + transform.forward * forwardSpeed * Time.fixedDeltaTime);
             rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(rotationInputDirection * rotationSpeed * Time.fixedDeltaTime, Vector3.up));
@@ -63,6 +64,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Finish"))
+        {
+            movingEnabled = false;
+        }
+    }
+
     private void PlacePlank()
     {
         if(planks.Count == 0)
@@ -91,7 +100,7 @@ public class Player : MonoBehaviour
     private IEnumerator DieCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        enableMoving = false;
+        movingEnabled = false;
         rb.isKinematic = false;
         GameManager.Instance.GameOver();
     }
