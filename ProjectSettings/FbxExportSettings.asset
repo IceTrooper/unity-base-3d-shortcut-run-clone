@@ -13,12 +13,14 @@
         "integrationSavePath": "C:\\Repos\\Unity\\unity-base-3d-shortcut-run-clone",
         "selectedDCCApp": 0,
         "prefabSavePaths": [
+            "_Project/Prefabs/Buildings",
             "_Project/Prefabs/Cars",
             "_Project/Prefabs/Path Elements",
             "_Project/Prefabs",
             "."
         ],
         "fbxSavePaths": [
+            "_Project/Models/Buildings",
             "_Project/Models/Cars",
             "_Project/Models",
             "."
