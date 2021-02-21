@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private Transform planksPoint;
     [SerializeField] private Transform placedPlanksParent;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip pickUpSound;
     [SerializeField] private PickUpIndicator pickUpIndicator;
 
     private int rotationInputDirection;
@@ -62,6 +64,7 @@ public class Player : MonoBehaviour
             collision.transform.SetParent(transform);
             collision.transform.SetPositionAndRotation(planksPoint.position + Vector3.up * planks.Count * 0.2f, transform.rotation);
             planks.Add(collision.transform);
+            audioSource.PlayOneShot(pickUpSound);
             pickUpIndicator.PickedUp();
         }
     }

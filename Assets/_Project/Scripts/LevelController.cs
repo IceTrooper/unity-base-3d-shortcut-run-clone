@@ -44,16 +44,14 @@ public class LevelController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape) && !gameOverPanel.activeSelf && !levelFinishedPanel.activeSelf)
         {
-            if(GamePaused)
+            if(pausePanel.activeSelf)
             {
-                Time.timeScale = 1f;
+                ResumeGame();
             }
             else
             {
-                Time.timeScale = 0f;
+                PauseGame();
             }
-            GamePaused = !GamePaused;
-            pausePanel.SetActive(GamePaused);
         }
     }
 
@@ -63,6 +61,13 @@ public class LevelController : MonoBehaviour
         yield return new WaitForSeconds(3f);
         player.movingEnabled = true;
         timer.StartTimer();
+    }
+
+    public void PauseGame()
+    {
+        GamePaused = true;
+        Time.timeScale = 0f;
+        pausePanel.SetActive(GamePaused);
     }
 
     public void ResumeGame()
