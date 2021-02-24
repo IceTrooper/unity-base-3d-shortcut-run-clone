@@ -42,9 +42,9 @@ public class LevelController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && !gameOverPanel.activeSelf && !levelFinishedPanel.activeSelf)
+        if(Input.GetKeyDown(KeyCode.Escape) && !gameOverPanel.activeInHierarchy && !levelFinishedPanel.activeInHierarchy)
         {
-            if(pausePanel.activeSelf)
+            if(pausePanel.activeInHierarchy)
             {
                 ResumeGame();
             }
@@ -87,12 +87,15 @@ public class LevelController : MonoBehaviour
 
     public void GameOver()
     {
-        timer.StopTimer();
-        gameOverPanel.SetActive(true);
+        if(!levelFinishedPanel.activeInHierarchy)
+        {
+            timer.StopTimer();
+            gameOverPanel.SetActive(true);
+        }
     }
 
     private float CalculateScore()
     {
-        return player.planksCount * 100f + timer.remainingTime/timeForLevel * 500f;
+        return player.planksCount * 10f + timer.remainingTime/timeForLevel * 500f;
     }
 }
